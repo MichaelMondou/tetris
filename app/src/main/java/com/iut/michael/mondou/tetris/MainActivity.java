@@ -23,17 +23,11 @@ public class MainActivity extends Activity {
             public void onGlobalLayout() {
                 gridview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 int iDisplayWidth = gridview.getWidth();
-                int iDisplayHeight = gridview.getHeight();
-                int iImageSize = iDisplayWidth / 10 - 10;
-                //while (iImageSize >= (gridview.getHeight()) / 20) {
-                //    iImageSize = iImageSize - 1;
-                //}
-                Log.d("width", String.valueOf(iDisplayWidth));
-                Log.d("height", String.valueOf(gridview.getHeight()));
-                Log.d("taille", String.valueOf(iImageSize));
-                gridview.setColumnWidth( iImageSize );
-                //gridview.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT, iImageSize));
-                gridview.setStretchMode( GridView.NO_STRETCH ) ;
+
+                int nbColumns = gridview.getNumColumns();
+                int iImageSize = iDisplayWidth / nbColumns - nbColumns;
+
+                gridview.setColumnWidth(iImageSize);
             }
         });
     }

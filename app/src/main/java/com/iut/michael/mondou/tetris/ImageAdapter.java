@@ -44,14 +44,13 @@ class ImageAdapter extends BaseAdapter {
         return 0;
     }
 
-    // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
 
         if (convertView == null) {
-            int iDisplayWidth = parent.getWidth() ;
-            int iImageSize = iDisplayWidth / 10 - 10 ;
-            while (iImageSize + 1 >= (parent.getHeight() - 20) / 20) {
+            int iDisplayWidth = parent.getWidth();
+            int iImageSize = iDisplayWidth / this.nbColumns;
+            while (iImageSize >= parent.getHeight() / this.nbLines) {
                 iImageSize = iImageSize - 1;
             }
             imageView = new ImageView(mContext);
