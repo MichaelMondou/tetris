@@ -14,8 +14,8 @@ class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<Integer> mArrayList;
 
-    private Integer nbLines = 9;
-    private Integer nbColumns = 9;
+    private Integer nbLines = 20;
+    private Integer nbColumns = 10;
 
     ImageAdapter(Context c) {
         mContext = c;
@@ -23,7 +23,7 @@ class ImageAdapter extends BaseAdapter {
     }
 
     private void initGrid() {
-        this.mArrayList = new ArrayList<Integer>();
+        this.mArrayList = new ArrayList<>();
 
         for (int i = 0; i < this.nbLines; i++) {
             for (int j = 0; j < this.nbColumns; j++) {
@@ -49,14 +49,19 @@ class ImageAdapter extends BaseAdapter {
         ImageView imageView;
 
         if (convertView == null) {
+            int iDisplayWidth = parent.getWidth() ;
+            int iImageSize = iDisplayWidth / 10 - 10 ;
+            while (iImageSize + 1 >= (parent.getHeight() - 20) / 20) {
+                iImageSize = iImageSize - 1;
+            }
             imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
+            imageView.setLayoutParams(new GridView.LayoutParams(iImageSize, iImageSize));
         } else {
             imageView = (ImageView) convertView;
         }
         imageView.setImageResource(this.mArrayList.get(position));
         return imageView;
     }
+
+
 }
