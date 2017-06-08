@@ -1,6 +1,5 @@
 package com.iut.michael.mondou.tetris;
 
-import android.util.Log;
 import android.widget.ImageView;
 import android.content.Context;
 import android.view.View;
@@ -14,6 +13,24 @@ class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<Integer> mArrayList;
 
+    private int[][] grid;
+
+    public Integer getNbLines() {
+        return nbLines;
+    }
+
+    public void setNbLines(Integer nbLines) {
+        this.nbLines = nbLines;
+    }
+
+    public Integer getNbColumns() {
+        return nbColumns;
+    }
+
+    public void setNbColumns(Integer nbColumns) {
+        this.nbColumns = nbColumns;
+    }
+
     private Integer nbLines = 20;
     private Integer nbColumns = 10;
 
@@ -24,10 +41,12 @@ class ImageAdapter extends BaseAdapter {
 
     private void initGrid() {
         this.mArrayList = new ArrayList<>();
+        this.grid = new int[this.nbLines][this.nbColumns];
 
         for (int i = 0; i < this.nbLines; i++) {
             for (int j = 0; j < this.nbColumns; j++) {
                 this.mArrayList.add(R.drawable.square);
+                this.grid[i][j] = R.drawable.square;
             }
         }
     }
@@ -62,5 +81,20 @@ class ImageAdapter extends BaseAdapter {
         return imageView;
     }
 
+    public ArrayList<Integer> getmArrayList() {
+        return mArrayList;
+    }
+
+    public void setmArrayList(ArrayList<Integer> mArrayList) {
+        this.mArrayList = mArrayList;
+    }
+
+    public int[][] getGrid() {
+        return grid;
+    }
+
+    public void setGrid(int[][] grid) {
+        this.grid = grid;
+    }
 
 }
