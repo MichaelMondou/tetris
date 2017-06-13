@@ -8,8 +8,23 @@ public class Piece_T extends Tetromino {
         this.setWidth(3);
         int[][] matrix = {{1, 1, 1}, {0, 1, 0}};
         this.setMatrix(matrix);
-        this.setPos_i(10);
-        this.setPos_j(5);
+        this.setPos_i(0);
+        this.setPos_j(4);
         this.setColor(R.drawable.piece_t);
+    }
+
+    @Override
+    public void rotate() {
+
+    }
+
+    @Override
+    public void left() {
+
+    }
+
+    @Override
+    public void right() {
+
     }
 }

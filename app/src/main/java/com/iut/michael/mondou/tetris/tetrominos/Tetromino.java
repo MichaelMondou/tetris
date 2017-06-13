@@ -1,6 +1,9 @@
 package com.iut.michael.mondou.tetris.tetrominos;
 
-public abstract class Tetromino {
+import com.iut.michael.mondou.tetris.IMovement;
+import com.iut.michael.mondou.tetris.IPossibleMovement;
+
+public abstract class Tetromino implements IMovement, IPossibleMovement {
     private int height;
     private int width;
     private int[][] matrix;
@@ -54,5 +57,15 @@ public abstract class Tetromino {
 
     void setColor(int color) {
         this.color = color;
+    }
+
+    @Override
+    public void down() {
+        setPos_i(getPos_i() + 1);
+    }
+
+    @Override
+    public boolean isPossibleMovement() {
+        return getPos_i() + getHeight() + 1 <= 20;
     }
 }

@@ -51,6 +51,14 @@ class ImageAdapter extends BaseAdapter {
         }
     }
 
+    void resetGrid() {
+        for (int i = 0; i < this.nbLines; i++) {
+            for (int j = 0; j < this.nbColumns; j++) {
+                this.grid[i][j] = R.drawable.square;
+            }
+        }
+    }
+
     public int getCount() {
         return mArrayList.size();
     }
@@ -79,6 +87,11 @@ class ImageAdapter extends BaseAdapter {
         }
         imageView.setImageResource(this.mArrayList.get(position));
         return imageView;
+    }
+
+    public void updateResults(ArrayList<Integer> arrayList) {
+        this.mArrayList = arrayList;
+        notifyDataSetChanged();
     }
 
     public ArrayList<Integer> getmArrayList() {
