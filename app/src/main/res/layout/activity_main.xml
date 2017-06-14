@@ -15,8 +15,9 @@
             android:id="@+id/relativeLayout4"
             android:layout_width="200dp"
             android:layout_height="400dp"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true">
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/resetLayout"
+            android:layout_marginTop="17dp">
 
             <GridView
                 android:id="@+id/gridview"
@@ -25,7 +26,9 @@
                 android:layout_height="match_parent"
                 android:numColumns="10"
                 android:horizontalSpacing="1px"
-                android:verticalSpacing="1px"/>
+                android:verticalSpacing="1px"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true" />
 
         </RelativeLayout>
 
@@ -33,31 +36,77 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:background="#FF0000"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:id="@+id/resetLayout"
             android:orientation="horizontal"
-            android:visibility="invisible">
+            android:visibility="invisible"
+            android:layout_alignTop="@+id/relativeLayout4"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="65dp">
 
+            <TextView
+                android:id="@+id/resetTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_weight="0.09"
+                android:text="Partie terminée"
+                android:visibility="invisible" />
         </LinearLayout>
 
         <Button
             android:id="@+id/resetButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Recommencer"
+            android:visibility="invisible"
             android:layout_alignBottom="@+id/resetLayout"
             android:layout_centerHorizontal="true"
-            android:text="Recommencer"
-            android:visibility="invisible"/>
+            android:layout_marginBottom="20dp" />
 
-        <TextView
-            android:id="@+id/resetTextView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/btnLL"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="Partie terminée"
-            android:visibility="invisible"/>
+            android:layout_below="@+id/relativeLayout4"
+            android:layout_alignParentBottom="true"
+            android:background="#00FF00">
 
+            <Button
+                android:id="@+id/leftButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Gauche"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/downButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Bas"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/rightButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Droite"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/rotateButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Rotation"
+                android:textSize="12sp" />
+        </LinearLayout>
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
