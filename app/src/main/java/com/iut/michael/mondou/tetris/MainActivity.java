@@ -4,8 +4,12 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.iut.michael.mondou.tetris.tetrominos.Tetromino;
 
@@ -19,6 +23,9 @@ public class MainActivity extends Activity {
     PieceFactory pieceFactory;
     boolean needMorePiece;
     boolean endOfGame;
+    LinearLayout layout;
+    Button button;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,15 @@ public class MainActivity extends Activity {
         this.needMorePiece = true;
         this.endOfGame = false;
 
+        this.layout = (LinearLayout) findViewById(R.id.linearLayout);
+        layout.setVisibility(View.INVISIBLE);
+
+        this.button = (Button) findViewById(R.id.button);
+        button.setVisibility(View.INVISIBLE);
+
+        this.textView = (TextView) findViewById(R.id.textView);
+        textView.setVisibility(View.INVISIBLE);
+
         final Handler handler = new Handler();
         Runnable r = new Runnable() {
             public void run() {
@@ -66,7 +82,32 @@ public class MainActivity extends Activity {
         moveLastPiece();
         if (!this.endOfGame) {
             isNeededOneMorePiece();
+        } else {
+            displayResetPanel();
         }
+    }
+
+    public void displayResetPanel() {
+        layout.setVisibility(View.VISIBLE);
+        button.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.VISIBLE);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                resetData();
+            }
+        });
+    }
+
+    public void resetData() {
+        adapter.initGrid();
+        list = adapter.getmArrayList();
+        pieces = new ArrayList<>();
+        needMorePiece = true;
+        endOfGame = false;
+        layout.setVisibility(View.INVISIBLE);
+        button.setVisibility(View.INVISIBLE);
+        textView.setVisibility(View.INVISIBLE);
     }
 
     public boolean canMoveDown(Tetromino piece) {

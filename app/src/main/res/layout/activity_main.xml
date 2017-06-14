@@ -28,5 +28,35 @@
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="#FF0000"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/linearLayout"
+            android:orientation="horizontal"
+            android:visibility="invisible">
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/linearLayout"
+            android:layout_centerHorizontal="true"
+            android:text="Recommencer"
+            android:visibility="invisible"/>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Partie terminée"
+            android:visibility="invisible"/>
+
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

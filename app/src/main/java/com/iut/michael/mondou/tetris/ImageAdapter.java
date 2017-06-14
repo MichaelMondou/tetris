@@ -39,7 +39,7 @@ class ImageAdapter extends BaseAdapter {
         initGrid();
     }
 
-    private void initGrid() {
+    public void initGrid() {
         this.mArrayList = new ArrayList<>();
         this.grid = new int[this.nbLines][this.nbColumns];
 
