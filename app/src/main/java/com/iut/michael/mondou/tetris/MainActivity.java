@@ -3,7 +3,6 @@ package com.iut.michael.mondou.tetris;
 import android.os.Bundle;
 import android.app.Activity;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -23,9 +22,9 @@ public class MainActivity extends Activity {
     PieceFactory pieceFactory;
     boolean needMorePiece;
     boolean endOfGame;
-    LinearLayout layout;
-    Button button;
-    TextView textView;
+    LinearLayout resetLayout;
+    Button resetButton;
+    TextView resetTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +57,14 @@ public class MainActivity extends Activity {
         this.needMorePiece = true;
         this.endOfGame = false;
 
-        this.layout = (LinearLayout) findViewById(R.id.linearLayout);
-        layout.setVisibility(View.INVISIBLE);
+        this.resetLayout = (LinearLayout) findViewById(R.id.resetLayout);
+        resetLayout.setVisibility(View.INVISIBLE);
 
-        this.button = (Button) findViewById(R.id.button);
-        button.setVisibility(View.INVISIBLE);
+        this.resetButton = (Button) findViewById(R.id.resetButton);
+        resetButton.setVisibility(View.INVISIBLE);
 
-        this.textView = (TextView) findViewById(R.id.textView);
-        textView.setVisibility(View.INVISIBLE);
+        this.resetTextView = (TextView) findViewById(R.id.resetTextView);
+        resetTextView.setVisibility(View.INVISIBLE);
 
         final Handler handler = new Handler();
         Runnable r = new Runnable() {
@@ -88,11 +87,11 @@ public class MainActivity extends Activity {
     }
 
     public void displayResetPanel() {
-        layout.setVisibility(View.VISIBLE);
-        button.setVisibility(View.VISIBLE);
-        textView.setVisibility(View.VISIBLE);
+        resetLayout.setVisibility(View.VISIBLE);
+        resetButton.setVisibility(View.VISIBLE);
+        resetTextView.setVisibility(View.VISIBLE);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        resetButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 resetData();
             }
@@ -105,9 +104,9 @@ public class MainActivity extends Activity {
         pieces = new ArrayList<>();
         needMorePiece = true;
         endOfGame = false;
-        layout.setVisibility(View.INVISIBLE);
-        button.setVisibility(View.INVISIBLE);
-        textView.setVisibility(View.INVISIBLE);
+        resetLayout.setVisibility(View.INVISIBLE);
+        resetButton.setVisibility(View.INVISIBLE);
+        resetTextView.setVisibility(View.INVISIBLE);
     }
 
     public boolean canMoveDown(Tetromino piece) {
