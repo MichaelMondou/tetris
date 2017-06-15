@@ -17,14 +17,4 @@ public class Piece_J extends Tetromino {
     public void rotate() {
 
     }
-
-    @Override
-    public void left() {
-
-    }
-
-    @Override
-    public void right() {
-
-    }
 }

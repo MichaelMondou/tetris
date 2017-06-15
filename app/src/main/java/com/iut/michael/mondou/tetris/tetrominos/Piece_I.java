@@ -29,14 +29,4 @@ public class Piece_I extends Tetromino implements IMovement, IPossibleMovement {
             this.setMatrix(matrix);
         }
     }
-
-    @Override
-    public void left() {
-
-    }
-
-    @Override
-    public void right() {
-
-    }
 }

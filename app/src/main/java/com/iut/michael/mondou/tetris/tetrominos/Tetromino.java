@@ -3,6 +3,8 @@ package com.iut.michael.mondou.tetris.tetrominos;
 import com.iut.michael.mondou.tetris.IMovement;
 import com.iut.michael.mondou.tetris.IPossibleMovement;
 
+import java.util.Objects;
+
 public abstract class Tetromino implements IMovement, IPossibleMovement {
     private int height;
     private int width;
@@ -65,7 +67,25 @@ public abstract class Tetromino implements IMovement, IPossibleMovement {
     }
 
     @Override
-    public boolean isPossibleMovement() {
-        return getPos_i() + getHeight() + 1 <= 20;
+    public void left() { setPos_j(getPos_j() - 1); }
+
+    @Override
+    public void right() { setPos_j(getPos_j() + 1);}
+
+    @Override
+    public void rotate() {
+
+    }
+
+    @Override
+    public boolean isPossibleMovement(String direction) {
+        if (Objects.equals(direction, "down")) {
+            return getPos_i() + getHeight() + 1 <= 20;
+        } else if (Objects.equals(direction, "left")) {
+            return getPos_j() - 1 >= 0;
+        } else if (Objects.equals(direction, "right")) {
+            return getPos_j() + getWidth() < 10;
+        }
+        return false;
     }
 }

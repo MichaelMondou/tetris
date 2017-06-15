@@ -3,6 +3,7 @@ package com.iut.michael.mondou.tetris;
 import android.os.Bundle;
 import android.app.Activity;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.iut.michael.mondou.tetris.tetrominos.Tetromino;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends Activity {
 
@@ -24,6 +26,9 @@ public class MainActivity extends Activity {
     boolean endOfGame;
     LinearLayout resetLayout;
     Button resetButton;
+    Button leftButton;
+    Button downButton;
+    Button rightButton;
     TextView resetTextView;
 
     @Override
@@ -63,6 +68,29 @@ public class MainActivity extends Activity {
         this.resetButton = (Button) findViewById(R.id.resetButton);
         resetButton.setVisibility(View.INVISIBLE);
 
+        this.leftButton = (Button) findViewById(R.id.leftButton);
+        this.downButton = (Button) findViewById(R.id.downButton);
+        this.rightButton = (Button) findViewById(R.id.rightButton);
+
+        leftButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                moveLastPiece("left");
+                refresh();
+            }
+        });
+        downButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                moveLastPiece("down");
+                refresh();
+            }
+        });
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                moveLastPiece("right");
+                refresh();
+            }
+        });
+
         this.resetTextView = (TextView) findViewById(R.id.resetTextView);
         resetTextView.setVisibility(View.INVISIBLE);
 
@@ -71,14 +99,14 @@ public class MainActivity extends Activity {
             public void run() {
                 play();
                 refresh();
-                handler.postDelayed(this, 100);
+                handler.postDelayed(this, 500);
             }
         };
         handler.post(r);
     }
 
     public void play() {
-        moveLastPiece();
+        moveLastPiece("down");
         if (!this.endOfGame) {
             isNeededOneMorePiece();
         } else {
@@ -128,14 +156,63 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    public void moveLastPiece() {
+    public boolean canMoveLeft(Tetromino piece) {
+        int[][] grid = this.adapter.getGrid();
+        for (int i = 0; i < piece.getHeight(); i++) {
+            for (int j = 0; j < piece.getWidth(); j++) {
+                if (piece.getMatrix()[i][j] == 1) {
+                    if (j - 1 >= 0) {
+                        if (piece.getMatrix()[i][j - 1] == 1) {
+                            continue;
+                        }
+                    }
+                    if (grid[piece.getPos_i() + i][piece.getPos_j() + j  - 1] != R.drawable.square) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean canMoveRight(Tetromino piece) {
+        int[][] grid = this.adapter.getGrid();
+        for (int i = 0; i < piece.getHeight(); i++) {
+            for (int j = 0; j < piece.getWidth(); j++) {
+                if (piece.getMatrix()[i][j] == 1) {
+                    if (j + 1 < piece.getWidth()) {
+                        if (piece.getMatrix()[i][j + 1] == 1) {
+                            continue;
+                        }
+                    }
+                    if (grid[piece.getPos_i() + i][piece.getPos_j() + j  + 1] != R.drawable.square) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public void moveLastPiece(String direction) {
         if (pieces.size() > 0) {
             Tetromino piece = (Tetromino) pieces.get(pieces.size() - 1);
             endOfGame(piece);
-            if (piece.isPossibleMovement() && canMoveDown(piece)) {
-                piece.down();
-            } else {
-                needMorePiece = true;
+
+            if (Objects.equals(direction, "down")) {
+                if (piece.isPossibleMovement(direction) && canMoveDown(piece)) {
+                    piece.down();
+                } else {
+                    needMorePiece = true;
+                }
+            } else if (Objects.equals(direction, "left")) {
+                if (piece.isPossibleMovement(direction) && canMoveLeft(piece)) {
+                    piece.left();
+                }
+            } else if (Objects.equals(direction, "right")) {
+                if (piece.isPossibleMovement(direction) && canMoveRight(piece)) {
+                    piece.right();
+                }
             }
         }
     }
