@@ -14,19 +14,4 @@ public class Piece_I extends Tetromino implements IMovement, IPossibleMovement {
         this.setPos_j(0);
         this.setColor(R.drawable.piece_i);
     }
-
-    @Override
-    public void rotate() {
-        if (this.getWidth() == 4) {
-            this.setWidth(1);
-            this.setHeight(4);
-            int[][] matrix = {{1}, {1}, {1}, {1}};
-            this.setMatrix(matrix);
-        } else if (this.getWidth() == 1) {
-            this.setHeight(1);
-            this.setWidth(4);
-            int[][] matrix = {{1, 1, 1, 1}};
-            this.setMatrix(matrix);
-        }
-    }
 }

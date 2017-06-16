@@ -74,7 +74,17 @@ public abstract class Tetromino implements IMovement, IPossibleMovement {
 
     @Override
     public void rotate() {
-
+        final int M = getMatrix().length;
+        final int N = getMatrix()[0].length;
+        int[][] ret = new int[N][M];
+        for (int r = 0; r < M; r++) {
+            for (int c = 0; c < N; c++) {
+                ret[c][M-1-r] = getMatrix()[r][c];
+            }
+        }
+        setWidth(ret[0].length);
+        setHeight(ret.length);
+        setMatrix(ret);
     }
 
     @Override
@@ -85,6 +95,8 @@ public abstract class Tetromino implements IMovement, IPossibleMovement {
             return getPos_j() - 1 >= 0;
         } else if (Objects.equals(direction, "right")) {
             return getPos_j() + getWidth() < 10;
+        } else if (Objects.equals(direction, "rotate")) {
+            return getPos_j() + getWidth() < 10 && getPos_j() - 1 >= 0 && getPos_i() + getHeight() + 1 <= 20;
         }
         return false;
     }

@@ -12,9 +12,4 @@ public class Piece_Z extends Tetromino {
         this.setPos_j(3);
         this.setColor(R.drawable.piece_z);
     }
-
-    @Override
-    public void rotate() {
-
-    }
 }

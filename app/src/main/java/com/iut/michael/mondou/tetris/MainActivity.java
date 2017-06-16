@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
     Button leftButton;
     Button downButton;
     Button rightButton;
+    Button rotateButton;
     TextView resetTextView;
 
     @Override
@@ -71,6 +72,7 @@ public class MainActivity extends Activity {
         this.leftButton = (Button) findViewById(R.id.leftButton);
         this.downButton = (Button) findViewById(R.id.downButton);
         this.rightButton = (Button) findViewById(R.id.rightButton);
+        this.rotateButton = (Button) findViewById(R.id.rotateButton);
 
         leftButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -87,6 +89,12 @@ public class MainActivity extends Activity {
         rightButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 moveLastPiece("right");
+                refresh();
+            }
+        });
+        rotateButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                moveLastPiece("rotate");
                 refresh();
             }
         });
@@ -212,6 +220,10 @@ public class MainActivity extends Activity {
             } else if (Objects.equals(direction, "right")) {
                 if (piece.isPossibleMovement(direction) && canMoveRight(piece)) {
                     piece.right();
+                }
+            } else if (Objects.equals(direction, "rotate")) {
+                if (piece.isPossibleMovement(direction) && canMoveRight(piece) && canMoveLeft(piece)) {
+                    piece.rotate();
                 }
             }
         }
