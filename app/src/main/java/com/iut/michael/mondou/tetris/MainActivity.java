@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
     TextView resetTextView;
     int score;
     ArrayList<Line> lines;
-
+    TextView scoreView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +115,7 @@ public class MainActivity extends Activity {
         };
         handler.post(r);
 
+        this.scoreView = (TextView) findViewById(R.id.scoreView);
         score = 0;
         this.lines = new ArrayList<>();
         initLines();
@@ -122,7 +123,6 @@ public class MainActivity extends Activity {
 
     public void play() {
         moveLastPiece("down");
-        removeLines();
         if (!this.endOfGame) {
             isNeededOneMorePiece();
         } else {
@@ -130,11 +130,12 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void removeLines() {
+    public void computeScore() {
         ArrayList<Integer> rows = new ArrayList<>();
         for (int i = this.adapter.getNbLines() - 1; i >= 0; i--) {
+            int[] cases = this.lines.get(i).getCases();
             for (int j = 0; j < this.adapter.getNbColumns(); j++) {
-                if (this.lines.get(i).getCases()[j] == R.drawable.square) {
+                if (cases[j] == R.drawable.square) {
                     break;
                 }
                 if (j == this.adapter.getNbColumns() - 1) {
@@ -143,6 +144,19 @@ public class MainActivity extends Activity {
             }
         }
 
+        int score = 0;
+        if (rows.size() == 1) {
+            score = 40;
+        } else if (rows.size() == 2) {
+            score = 100;
+        } else if (rows.size() == 3) {
+            score = 300;
+        } else if (rows.size() == 4) {
+            score = 1200;
+        }
+
+        this.score += score;
+
         int[] cases = new int[this.adapter.getNbColumns()];
         for (int j=0; j < this.adapter.getNbColumns(); j++) {
             cases[j] = R.drawable.square;
@@ -150,6 +164,8 @@ public class MainActivity extends Activity {
 
         for (int k = 0; k < rows.size(); k++) {
             this.lines.remove((int) rows.get(k));
+        }
+        for (int k = 0; k < rows.size(); k++) {
             this.lines.add(0, new Line(0, cases));
         }
     }
@@ -169,6 +185,7 @@ public class MainActivity extends Activity {
     public void resetData() {
         adapter.resetGrid();
         this.initLines();
+        this.score = 0;
         list = adapter.getmArrayList();
         pieces = new ArrayList<>();
         needMorePiece = true;
@@ -242,6 +259,7 @@ public class MainActivity extends Activity {
                     showLastPlace(piece);
                     piece.down();
                 } else {
+                    computeScore();
                     needMorePiece = true;
                 }
             } else if (Objects.equals(direction, "left")) {
@@ -274,6 +292,7 @@ public class MainActivity extends Activity {
     }
 
     public void initLines() {
+        this.lines.clear();
         for (int i = 0; i < this.adapter.getNbLines(); i++) {
             int[] cases = new int[this.adapter.getNbColumns()];
             for (int j=0; j < this.adapter.getNbColumns(); j++) {
@@ -335,6 +354,8 @@ public class MainActivity extends Activity {
     public void refresh() {
         updateGrid();
         updateLines();
+
+        this.scoreView.setText("Score : " + this.score);
 
         for (int i = 0; i < this.adapter.getNbLines(); i++) {
             for (int j = 0; j < this.adapter.getNbColumns(); j++) {
