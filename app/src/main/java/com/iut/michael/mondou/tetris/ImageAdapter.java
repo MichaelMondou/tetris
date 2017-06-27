@@ -42,18 +42,14 @@ class ImageAdapter extends BaseAdapter {
     public void initGrid() {
         this.mArrayList = new ArrayList<>();
         this.grid = new int[this.nbLines][this.nbColumns];
-
-        for (int i = 0; i < this.nbLines; i++) {
-            for (int j = 0; j < this.nbColumns; j++) {
-                this.mArrayList.add(R.drawable.square);
-                this.grid[i][j] = R.drawable.square;
-            }
-        }
+        this.resetGrid();
     }
 
     void resetGrid() {
+        this.mArrayList.clear();
         for (int i = 0; i < this.nbLines; i++) {
             for (int j = 0; j < this.nbColumns; j++) {
+                this.mArrayList.add(R.drawable.square);
                 this.grid[i][j] = R.drawable.square;
             }
         }

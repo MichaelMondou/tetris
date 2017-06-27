@@ -31,6 +31,9 @@ public class MainActivity extends Activity {
     Button rightButton;
     Button rotateButton;
     TextView resetTextView;
+    int score;
+    ArrayList<Line> lines;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,14 +114,43 @@ public class MainActivity extends Activity {
             }
         };
         handler.post(r);
+
+        score = 0;
+        this.lines = new ArrayList<>();
+        initLines();
     }
 
     public void play() {
         moveLastPiece("down");
+        removeLines();
         if (!this.endOfGame) {
             isNeededOneMorePiece();
         } else {
             displayResetPanel();
+        }
+    }
+
+    public void removeLines() {
+        ArrayList<Integer> rows = new ArrayList<>();
+        for (int i = this.adapter.getNbLines() - 1; i >= 0; i--) {
+            for (int j = 0; j < this.adapter.getNbColumns(); j++) {
+                if (this.lines.get(i).getCases()[j] == R.drawable.square) {
+                    break;
+                }
+                if (j == this.adapter.getNbColumns() - 1) {
+                    rows.add(i);
+                }
+            }
+        }
+
+        int[] cases = new int[this.adapter.getNbColumns()];
+        for (int j=0; j < this.adapter.getNbColumns(); j++) {
+            cases[j] = R.drawable.square;
+        }
+
+        for (int k = 0; k < rows.size(); k++) {
+            this.lines.remove((int) rows.get(k));
+            this.lines.add(0, new Line(0, cases));
         }
     }
 
@@ -135,7 +167,8 @@ public class MainActivity extends Activity {
     }
 
     public void resetData() {
-        adapter.initGrid();
+        adapter.resetGrid();
+        this.initLines();
         list = adapter.getmArrayList();
         pieces = new ArrayList<>();
         needMorePiece = true;
@@ -146,7 +179,6 @@ public class MainActivity extends Activity {
     }
 
     public boolean canMoveDown(Tetromino piece) {
-        int[][] grid = this.adapter.getGrid();
         for (int i = 0; i < piece.getHeight(); i++) {
             for (int j = 0; j < piece.getWidth(); j++) {
                 if (piece.getMatrix()[i][j] == 1) {
@@ -155,7 +187,7 @@ public class MainActivity extends Activity {
                             continue;
                         }
                     }
-                    if (grid[piece.getPos_i() + i + 1][piece.getPos_j() + j] != R.drawable.square) {
+                    if (this.lines.get(piece.getPos_i() + i + 1).getCases()[piece.getPos_j() + j] != R.drawable.square) {
                         return false;
                     }
                 }
@@ -165,7 +197,6 @@ public class MainActivity extends Activity {
     }
 
     public boolean canMoveLeft(Tetromino piece) {
-        int[][] grid = this.adapter.getGrid();
         for (int i = 0; i < piece.getHeight(); i++) {
             for (int j = 0; j < piece.getWidth(); j++) {
                 if (piece.getMatrix()[i][j] == 1) {
@@ -174,7 +205,7 @@ public class MainActivity extends Activity {
                             continue;
                         }
                     }
-                    if (grid[piece.getPos_i() + i][piece.getPos_j() + j  - 1] != R.drawable.square) {
+                    if (this.lines.get(piece.getPos_i() + i).getCases()[piece.getPos_j() + j - 1] != R.drawable.square) {
                         return false;
                     }
                 }
@@ -184,7 +215,6 @@ public class MainActivity extends Activity {
     }
 
     public boolean canMoveRight(Tetromino piece) {
-        int[][] grid = this.adapter.getGrid();
         for (int i = 0; i < piece.getHeight(); i++) {
             for (int j = 0; j < piece.getWidth(); j++) {
                 if (piece.getMatrix()[i][j] == 1) {
@@ -193,7 +223,7 @@ public class MainActivity extends Activity {
                             continue;
                         }
                     }
-                    if (grid[piece.getPos_i() + i][piece.getPos_j() + j  + 1] != R.drawable.square) {
+                    if (this.lines.get(piece.getPos_i() + i).getCases()[piece.getPos_j() + j + 1] != R.drawable.square) {
                         return false;
                     }
                 }
@@ -209,23 +239,48 @@ public class MainActivity extends Activity {
 
             if (Objects.equals(direction, "down")) {
                 if (piece.isPossibleMovement(direction) && canMoveDown(piece)) {
+                    showLastPlace(piece);
                     piece.down();
                 } else {
                     needMorePiece = true;
                 }
             } else if (Objects.equals(direction, "left")) {
                 if (piece.isPossibleMovement(direction) && canMoveLeft(piece)) {
+                    showLastPlace(piece);
                     piece.left();
                 }
             } else if (Objects.equals(direction, "right")) {
                 if (piece.isPossibleMovement(direction) && canMoveRight(piece)) {
+                    showLastPlace(piece);
                     piece.right();
                 }
             } else if (Objects.equals(direction, "rotate")) {
                 if (piece.isPossibleMovement(direction) && canMoveRight(piece) && canMoveLeft(piece)) {
+                    showLastPlace(piece);
                     piece.rotate();
                 }
             }
+        }
+    }
+
+    public void showLastPlace(Tetromino piece) {
+        for (int k = 0; k < piece.getHeight(); k++) {
+            for (int l = 0; l < piece.getWidth(); l++) {
+                if (piece.getMatrix()[k][l] == 1) {
+                    this.adapter.getGrid()[piece.getPos_i() + k][piece.getPos_j() + l] = -1;
+                }
+            }
+        }
+    }
+
+    public void initLines() {
+        for (int i = 0; i < this.adapter.getNbLines(); i++) {
+            int[] cases = new int[this.adapter.getNbColumns()];
+            for (int j=0; j < this.adapter.getNbColumns(); j++) {
+                cases[j] = R.drawable.square;
+            }
+            Line line = new Line(i, cases);
+            this.lines.add(line);
         }
     }
 
@@ -244,24 +299,46 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void refresh() {
-        this.adapter.resetGrid();
+    public void updateGrid() {
         int[][] grid = this.adapter.getGrid();
 
-        for (IMovement item : this.pieces) {
-            Tetromino piece = (Tetromino) item;
-            for (int i = 0; i < piece.getHeight(); i++) {
-                for (int j = 0; j < piece.getWidth(); j++) {
-                    if (piece.getMatrix()[i][j] == 1) {
-                        grid[piece.getPos_i() + i][piece.getPos_j() + j] = piece.getColor();
-                    }
+        Tetromino piece = (Tetromino) pieces.get(pieces.size() - 1);
+
+        for (int k = 0; k < piece.getHeight(); k++) {
+            for (int l = 0; l < piece.getWidth(); l++) {
+                if (piece.getMatrix()[k][l] == 1) {
+                    grid[piece.getPos_i() + k][piece.getPos_j() + l] = piece.getColor();
                 }
             }
         }
+    }
+
+    public void updateLines() {
+        int[][] grid = this.adapter.getGrid();
+        for (int i = 0; i < this.adapter.getNbLines(); i++) {
+            int[] cases = new int[this.adapter.getNbColumns()];
+            for (int j = 0; j < this.adapter.getNbColumns(); j++) {
+                if (grid[i][j] == -1) {
+                    cases[j] = R.drawable.square;
+                }
+                else if (grid[i][j] != R.drawable.square) {
+                    cases[j] = grid[i][j];
+                } else {
+                    cases[j] = lines.get(i).getCases()[j];
+                }
+            }
+            lines.get(i).setCases(cases);
+        }
+        this.adapter.resetGrid();
+    }
+
+    public void refresh() {
+        updateGrid();
+        updateLines();
 
         for (int i = 0; i < this.adapter.getNbLines(); i++) {
             for (int j = 0; j < this.adapter.getNbColumns(); j++) {
-                this.list.set(i * this.adapter.getNbColumns() + j, grid[i][j]);
+                this.list.set(i * this.adapter.getNbColumns() + j, this.lines.get(i).getCases()[j]);
             }
         }
 
