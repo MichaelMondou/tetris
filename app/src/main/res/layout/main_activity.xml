@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@android:style/Theme.NoTitleBar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/splashcreen" />
+
+    <Button
+        android:id="@+id/playButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startGame"
+        android:text="Jouer" />
+
+    <Button
+        android:id="@+id/bestScoresButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Meilleurs scores" />
+</LinearLayout>
