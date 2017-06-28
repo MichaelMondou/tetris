@@ -1,17 +1,25 @@
 package com.iut.michael.mondou.tetris;
 
 import android.content.Context;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+
+import static android.content.Context.WINDOW_SERVICE;
 
 class Android_Gesture_Detector implements GestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener {
 
     GameActivity activity;
+    int widthPixels;
+    int heightPixels;
 
     Android_Gesture_Detector(Context context) {
         this.activity = (GameActivity) context;
+        DisplayMetrics metrics = new DisplayMetrics();
+        this.activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        this.widthPixels = metrics.widthPixels;
+        this.heightPixels = metrics.heightPixels;
     }
 
     @Override
@@ -26,8 +34,14 @@ class Android_Gesture_Detector implements GestureDetector.OnGestureListener,
 
     @Override
     public boolean onSingleTapUp(MotionEvent motionEvent) {
-        this.activity.moveLastPiece("rotate");
-        this.activity.refresh();
+        if (motionEvent.getX() < 200) {
+            this.activity.moveLastPiece("left");
+            this.activity.refresh();
+        }
+        else if (motionEvent.getX() > this.widthPixels - 200) {
+            this.activity.moveLastPiece("right");
+            this.activity.refresh();
+        }
         return true;
     }
 
@@ -45,12 +59,7 @@ class Android_Gesture_Detector implements GestureDetector.OnGestureListener,
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
         if (e1.getX() < e2.getX() && Math.abs(e1.getX() - e2.getX()) > 300) {
-            this.activity.moveLastPiece("right");
-            this.activity.refresh();
-        }
-
-        if (e1.getX() > e2.getX() && Math.abs(e2.getX() - e1.getX()) > 300) {
-            this.activity.moveLastPiece("left");
+            this.activity.moveLastPiece("rotate");
             this.activity.refresh();
         }
 
