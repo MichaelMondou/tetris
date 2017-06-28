@@ -20,10 +20,4 @@
         android:layout_height="wrap_content"
         android:onClick="startGame"
         android:text="Jouer" />
-
-    <Button
-        android:id="@+id/bestScoresButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Meilleurs scores" />
 </LinearLayout>

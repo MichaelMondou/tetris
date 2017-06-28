@@ -1,8 +1,11 @@
 package com.iut.michael.mondou.tetris;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Activity;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -31,8 +34,10 @@ public class GameActivity extends Activity {
     Button resetButton;
     TextView resetTextView;
     int score;
+    int highScore;
     ArrayList<Line> lines;
     TextView scoreView;
+    TextView highScoreView;
     ImageButton menuButton;
     ImageButton pauseButton;
     boolean playState = true;
@@ -117,7 +122,12 @@ public class GameActivity extends Activity {
         handler.post(r);
 
         this.scoreView = (TextView) findViewById(R.id.scoreView);
+        this.highScoreView = (TextView) findViewById(R.id.highScoreView);
         score = 0;
+        SharedPreferences prefs = this.getSharedPreferences(
+                "highScore", Context.MODE_PRIVATE);
+        this.highScore = prefs.getInt("highScore", 0);
+        this.highScoreView.setText("Meilleur score : " + this.highScore);
         this.lines = new ArrayList<>();
         initLines();
     }
@@ -134,7 +144,21 @@ public class GameActivity extends Activity {
         if (!this.endOfGame) {
             isNeededOneMorePiece();
         } else {
+            saveScore();
             displayResetPanel();
+        }
+    }
+
+    public void saveScore() {
+        Log.d("score", String.valueOf(this.score));
+        Log.d("highscore", String.valueOf(this.highScore));
+        if (this.score > this.highScore) {
+            SharedPreferences prefs = this.getSharedPreferences(
+                    "highScore", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("highScore", this.score);
+            editor.apply();
+            Log.d("new highscore", String.valueOf(prefs.getInt("highScore", 0)));
         }
     }
 

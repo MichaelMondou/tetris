@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
     }
 
-    /** Called when the user taps the Send button */
+    /** Called when the user taps the play button */
     public void startGame(View view) {
         Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);

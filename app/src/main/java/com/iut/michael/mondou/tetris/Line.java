@@ -1,9 +1,5 @@
 package com.iut.michael.mondou.tetris;
 
-/**
- * Created by Mika on 26/06/2017.
- */
-
 public class Line {
     private int pos_i;
 
