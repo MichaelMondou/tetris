@@ -88,14 +88,14 @@ public abstract class Tetromino implements IMovement, IPossibleMovement {
     }
 
     @Override
-    public boolean isPossibleMovement(String direction) {
-        if (Objects.equals(direction, "down")) {
+    public boolean isPossibleMovement(int direction) {
+        if (direction == DOWN) {
             return getPos_i() + getHeight() + 1 <= 20;
-        } else if (Objects.equals(direction, "left")) {
+        } else if (direction == LEFT) {
             return getPos_j() - 1 >= 0;
-        } else if (Objects.equals(direction, "right")) {
+        } else if (direction == RIGHT) {
             return getPos_j() + getWidth() < 10;
-        } else if (Objects.equals(direction, "rotate")) {
+        } else if (direction == ROTATE) {
             return getPos_j() + getWidth() < 10 && getPos_j() - 1 >= 0 && getPos_i() + getHeight() + 1 <= 20;
         }
         return false;

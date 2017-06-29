@@ -10,10 +10,10 @@ public class Line {
         this.cases = cases;
     }
 
-    public int[] getCases() {
+    int[] getCases() {
         return cases;
     }
-    public void setCases(int[] cases) {
+    void setCases(int[] cases) {
         this.cases = cases;
     }
 }

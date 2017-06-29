@@ -10,53 +10,36 @@ import android.widget.GridView;
 import java.util.ArrayList;
 
 class ImageAdapter extends BaseAdapter {
-    private Context mContext;
-    private ArrayList<Integer> mArrayList;
+    private Context m_context;
+    private ArrayList<Integer> m_arrayList;
 
-    private int[][] grid;
-
-    public Integer getNbLines() {
-        return nbLines;
-    }
-
-    public void setNbLines(Integer nbLines) {
-        this.nbLines = nbLines;
-    }
-
-    public Integer getNbColumns() {
-        return nbColumns;
-    }
-
-    public void setNbColumns(Integer nbColumns) {
-        this.nbColumns = nbColumns;
-    }
-
-    private Integer nbLines = 20;
-    private Integer nbColumns = 10;
+    private int m_nbColumns = 10;
+    private int m_nbLines = 20;
+    private int[][] m_grid;
 
     ImageAdapter(Context c) {
-        mContext = c;
+        m_context = c;
         initGrid();
     }
 
-    public void initGrid() {
-        this.mArrayList = new ArrayList<>();
-        this.grid = new int[this.nbLines][this.nbColumns];
-        this.resetGrid();
+    private void initGrid() {
+        m_arrayList = new ArrayList<>();
+        m_grid = new int[m_nbLines][m_nbColumns];
+        resetGrid();
     }
 
     void resetGrid() {
-        this.mArrayList.clear();
-        for (int i = 0; i < this.nbLines; i++) {
-            for (int j = 0; j < this.nbColumns; j++) {
-                this.mArrayList.add(R.drawable.square);
-                this.grid[i][j] = R.drawable.square;
+        m_arrayList.clear();
+        for (int i = 0; i < m_nbLines; i++) {
+            for (int j = 0; j < m_nbColumns; j++) {
+                m_arrayList.add(R.drawable.square);
+                m_grid[i][j] = R.drawable.square;
             }
         }
     }
 
     public int getCount() {
-        return mArrayList.size();
+        return m_arrayList.size();
     }
 
     public Object getItem(int position) {
@@ -72,38 +55,34 @@ class ImageAdapter extends BaseAdapter {
 
         if (convertView == null) {
             int iDisplayWidth = parent.getWidth();
-            int iImageSize = iDisplayWidth / this.nbColumns;
-            while (iImageSize >= parent.getHeight() / this.nbLines) {
+            int iImageSize = iDisplayWidth / m_nbColumns;
+            while (iImageSize >= parent.getHeight() / m_nbLines) {
                 iImageSize = iImageSize - 1;
             }
-            imageView = new ImageView(mContext);
+            imageView = new ImageView(m_context);
             imageView.setLayoutParams(new GridView.LayoutParams(iImageSize, iImageSize));
         } else {
             imageView = (ImageView) convertView;
         }
-        imageView.setImageResource(this.mArrayList.get(position));
+        imageView.setImageResource(m_arrayList.get(position));
         return imageView;
     }
 
-    public void updateResults(ArrayList<Integer> arrayList) {
-        this.mArrayList = arrayList;
+    void updateResults(ArrayList<Integer> arrayList) {
+        m_arrayList = arrayList;
         notifyDataSetChanged();
     }
 
-    public ArrayList<Integer> getmArrayList() {
-        return mArrayList;
+    ArrayList<Integer> getArrayList() {
+        return m_arrayList;
     }
-
-    public void setmArrayList(ArrayList<Integer> mArrayList) {
-        this.mArrayList = mArrayList;
+    int[][] getGrid() {
+        return m_grid;
     }
-
-    public int[][] getGrid() {
-        return grid;
+    Integer getNbLines() {
+        return m_nbLines;
     }
-
-    public void setGrid(int[][] grid) {
-        this.grid = grid;
+    Integer getNbColumns() {
+        return m_nbColumns;
     }
-
 }

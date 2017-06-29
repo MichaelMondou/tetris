@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">Tetris</string>
     <string name="action_settings">Settings</string>
+    <string name="game_over">Partie terminée</string>
+    <string name="try_again">Recommencer</string>
+    <string name="pause">Pause</string>
+    <string name="score">Score</string>
+    <string name="best_score">Meilleur score</string>
+    <string name="menu">Menu</string>
+    <string name="pause_play">Pause / Jouer</string>
+    <string name="tetris_logo">Logo Tetris</string>
+    <string name="play">Jouer</string>
 </resources>

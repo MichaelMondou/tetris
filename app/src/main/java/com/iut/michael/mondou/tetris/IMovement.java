@@ -1,11 +1,13 @@
 package com.iut.michael.mondou.tetris;
 
 public interface IMovement {
-    public void rotate();
+    static int LEFT = 1;
+    static int DOWN = 2;
+    static int RIGHT = 3;
+    static int ROTATE = 4;
 
-    public void left();
-
-    public void right();
-
-    public void down();
+    void left();
+    void down();
+    void right();
+    void rotate();
 }

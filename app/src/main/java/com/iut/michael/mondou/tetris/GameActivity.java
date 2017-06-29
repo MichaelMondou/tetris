@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,43 +18,47 @@ import android.widget.TextView;
 import com.iut.michael.mondou.tetris.tetrominos.Tetromino;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class GameActivity extends Activity {
 
-    ImageAdapter adapter;
-    ArrayList<IMovement> pieces;
-    ArrayList<Integer> list;
-    PieceFactory pieceFactory;
-    boolean needMorePiece;
-    boolean endOfGame;
-    LinearLayout resetLayout;
-    Button resetButton;
-    TextView resetTextView;
-    int score;
-    int highScore;
-    ArrayList<Line> lines;
-    TextView scoreView;
-    TextView highScoreView;
-    ImageButton menuButton;
-    ImageButton pauseButton;
-    boolean playState = true;
+    static int LEFT = 1;
+    static int DOWN = 2;
+    static int RIGHT = 3;
+    static int ROTATE = 4;
 
-    private GestureDetector mGestureDetector;
+    ImageAdapter m_adapter;
+    PieceFactory m_pieceFactory;
+    ArrayList<IMovement> m_pieces;
+    ArrayList<Integer> m_list;
+    ArrayList<Line> m_lines;
+    LinearLayout m_resetLayout;
+    Button m_resetButton;
+    ImageButton m_menuImageButton;
+    ImageButton m_pauseImageButton;
+    TextView m_resetView;
+    TextView m_scoreView;
+    TextView m_highScoreView;
+    int m_score;
+    int m_highScore;
+    boolean m_needMorePiece;
+    boolean m_endOfGame;
+    boolean m_playState = true;
+
+    GestureDetector m_gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_activity);
 
-        this.pieceFactory = new PieceFactory();
+        m_pieceFactory = new PieceFactory();
 
         final GridView gridview = (GridView) findViewById(R.id.gridview);
-        this.adapter = new ImageAdapter(this);
-        gridview.setAdapter(adapter);
+        m_adapter = new ImageAdapter(this);
+        gridview.setAdapter(m_adapter);
 
         Android_Gesture_Detector android_gesture_detector  =  new Android_Gesture_Detector(this);
-        mGestureDetector = new GestureDetector(this, android_gesture_detector);
+        m_gestureDetector = new GestureDetector(this, android_gesture_detector);
 
         gridview.setOnTouchListener(new OnSwipeListener(this));
 
@@ -72,38 +75,38 @@ public class GameActivity extends Activity {
             }
         });
 
-        this.list = this.adapter.getmArrayList();
+        m_list = m_adapter.getArrayList();
 
-        this.pieces = new ArrayList<>();
+        m_pieces = new ArrayList<>();
 
-        this.needMorePiece = true;
-        this.endOfGame = false;
+        m_needMorePiece = true;
+        m_endOfGame = false;
 
-        this.resetLayout = (LinearLayout) findViewById(R.id.resetLayout);
-        resetLayout.setVisibility(View.INVISIBLE);
+        m_resetLayout = (LinearLayout) findViewById(R.id.resetLayout);
+        m_resetLayout.setVisibility(View.INVISIBLE);
 
-        this.resetButton = (Button) findViewById(R.id.resetButton);
-        resetButton.setVisibility(View.INVISIBLE);
+        m_resetButton = (Button) findViewById(R.id.resetButton);
+        m_resetButton.setVisibility(View.INVISIBLE);
 
-        this.resetTextView = (TextView) findViewById(R.id.resetTextView);
-        resetTextView.setVisibility(View.INVISIBLE);
+        m_resetView = (TextView) findViewById(R.id.resetView);
+        m_resetView.setVisibility(View.INVISIBLE);
 
-        this.menuButton = (ImageButton) findViewById(R.id.menuButton);
-        this.menuButton.setOnClickListener(new View.OnClickListener() {
+        m_menuImageButton = (ImageButton) findViewById(R.id.menuButton);
+        m_menuImageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 finish();
             }
         });
 
-        this.pauseButton = (ImageButton) findViewById(R.id.pauseButton);
-        this.pauseButton.setOnClickListener(new View.OnClickListener() {
+        m_pauseImageButton = (ImageButton) findViewById(R.id.pauseButton);
+        m_pauseImageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (playState) {
-                    playState = false;
-                    pauseButton.setBackgroundResource(R.drawable.play);
+                if (m_playState) {
+                    m_playState = false;
+                    m_pauseImageButton.setBackgroundResource(R.drawable.play);
                 } else {
-                    playState = true;
-                    pauseButton.setBackgroundResource(R.drawable.pause);
+                    m_playState = true;
+                    m_pauseImageButton.setBackgroundResource(R.drawable.pause);
                 }
             }
         });
@@ -111,7 +114,7 @@ public class GameActivity extends Activity {
         final Handler handler = new Handler();
         Runnable r = new Runnable() {
             public void run() {
-                if (playState) {
+                if (m_playState) {
                     play();
                     refresh();
                 }
@@ -120,27 +123,26 @@ public class GameActivity extends Activity {
         };
         handler.post(r);
 
-        this.scoreView = (TextView) findViewById(R.id.scoreView);
-        this.highScoreView = (TextView) findViewById(R.id.highScoreView);
-        score = 0;
+        m_scoreView = (TextView) findViewById(R.id.scoreView);
+        m_highScoreView = (TextView) findViewById(R.id.highScoreView);
+        m_score = 0;
         SharedPreferences prefs = this.getSharedPreferences(
-                "highScore", Context.MODE_PRIVATE);
-        this.highScore = prefs.getInt("highScore", 0);
-        this.highScoreView.setText("Meilleur score : " + this.highScore);
-        this.lines = new ArrayList<>();
+                "m_highScore", Context.MODE_PRIVATE);
+        m_highScore = prefs.getInt("m_highScore", 0);
+        m_highScoreView.setText(getString(R.string.best_score) + " : " + m_highScore);
+        m_lines = new ArrayList<>();
         initLines();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mGestureDetector.onTouchEvent(event);
-
+        m_gestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
     public void play() {
-        moveLastPiece("down");
-        if (!this.endOfGame) {
+        moveLastPiece(DOWN);
+        if (!m_endOfGame) {
             isNeededOneMorePiece();
         } else {
             saveScore();
@@ -149,27 +151,24 @@ public class GameActivity extends Activity {
     }
 
     public void saveScore() {
-        Log.d("score", String.valueOf(this.score));
-        Log.d("highscore", String.valueOf(this.highScore));
-        if (this.score > this.highScore) {
+        if (m_score > m_highScore) {
             SharedPreferences prefs = this.getSharedPreferences(
-                    "highScore", Context.MODE_PRIVATE);
+                    "m_highScore", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt("highScore", this.score);
+            editor.putInt("m_highScore", m_score);
             editor.apply();
-            Log.d("new highscore", String.valueOf(prefs.getInt("highScore", 0)));
         }
     }
 
     public void computeScore() {
         ArrayList<Integer> rows = new ArrayList<>();
-        for (int i = this.adapter.getNbLines() - 1; i >= 0; i--) {
-            int[] cases = this.lines.get(i).getCases();
-            for (int j = 0; j < this.adapter.getNbColumns(); j++) {
+        for (int i = m_adapter.getNbLines() - 1; i >= 0; i--) {
+            int[] cases = m_lines.get(i).getCases();
+            for (int j = 0; j < m_adapter.getNbColumns(); j++) {
                 if (cases[j] == R.drawable.square) {
                     break;
                 }
-                if (j == this.adapter.getNbColumns() - 1) {
+                if (j == m_adapter.getNbColumns() - 1) {
                     rows.add(i);
                 }
             }
@@ -186,27 +185,27 @@ public class GameActivity extends Activity {
             score = 1200;
         }
 
-        this.score += score;
+        m_score += score;
 
-        int[] cases = new int[this.adapter.getNbColumns()];
-        for (int j = 0; j < this.adapter.getNbColumns(); j++) {
+        int[] cases = new int[m_adapter.getNbColumns()];
+        for (int j = 0; j < m_adapter.getNbColumns(); j++) {
             cases[j] = R.drawable.square;
         }
 
         for (int k = 0; k < rows.size(); k++) {
-            this.lines.remove((int) rows.get(k));
+            m_lines.remove((int) rows.get(k));
         }
         for (int k = 0; k < rows.size(); k++) {
-            this.lines.add(0, new Line(0, cases));
+            m_lines.add(0, new Line(0, cases));
         }
     }
 
     public void displayResetPanel() {
-        resetLayout.setVisibility(View.VISIBLE);
-        resetButton.setVisibility(View.VISIBLE);
-        resetTextView.setVisibility(View.VISIBLE);
+        m_resetLayout.setVisibility(View.VISIBLE);
+        m_resetButton.setVisibility(View.VISIBLE);
+        m_resetView.setVisibility(View.VISIBLE);
 
-        resetButton.setOnClickListener(new View.OnClickListener() {
+        m_resetButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 resetData();
             }
@@ -214,16 +213,16 @@ public class GameActivity extends Activity {
     }
 
     public void resetData() {
-        adapter.resetGrid();
-        this.initLines();
-        this.score = 0;
-        list = adapter.getmArrayList();
-        pieces = new ArrayList<>();
-        needMorePiece = true;
-        endOfGame = false;
-        resetLayout.setVisibility(View.INVISIBLE);
-        resetButton.setVisibility(View.INVISIBLE);
-        resetTextView.setVisibility(View.INVISIBLE);
+        m_adapter.resetGrid();
+        initLines();
+        m_score = 0;
+        m_list = m_adapter.getArrayList();
+        m_pieces = new ArrayList<>();
+        m_needMorePiece = true;
+        m_endOfGame = false;
+        m_resetLayout.setVisibility(View.INVISIBLE);
+        m_resetButton.setVisibility(View.INVISIBLE);
+        m_resetView.setVisibility(View.INVISIBLE);
     }
 
     public boolean canMoveDown(Tetromino piece) {
@@ -235,7 +234,7 @@ public class GameActivity extends Activity {
                             continue;
                         }
                     }
-                    if (this.lines.get(piece.getPos_i() + i + 1).getCases()[piece.getPos_j() + j] != R.drawable.square) {
+                    if (m_lines.get(piece.getPos_i() + i + 1).getCases()[piece.getPos_j() + j] != R.drawable.square) {
                         return false;
                     }
                 }
@@ -253,7 +252,7 @@ public class GameActivity extends Activity {
                             continue;
                         }
                     }
-                    if (this.lines.get(piece.getPos_i() + i).getCases()[piece.getPos_j() + j - 1] != R.drawable.square) {
+                    if (m_lines.get(piece.getPos_i() + i).getCases()[piece.getPos_j() + j - 1] != R.drawable.square) {
                         return false;
                     }
                 }
@@ -271,7 +270,7 @@ public class GameActivity extends Activity {
                             continue;
                         }
                     }
-                    if (this.lines.get(piece.getPos_i() + i).getCases()[piece.getPos_j() + j + 1] != R.drawable.square) {
+                    if (m_lines.get(piece.getPos_i() + i).getCases()[piece.getPos_j() + j + 1] != R.drawable.square) {
                         return false;
                     }
                 }
@@ -280,30 +279,31 @@ public class GameActivity extends Activity {
         return true;
     }
 
-    public void moveLastPiece(String direction) {
-        if (pieces.size() > 0 && playState) {
-            Tetromino piece = (Tetromino) pieces.get(pieces.size() - 1);
+    public void moveLastPiece(int direction) {
+        if (m_pieces.size() > 0 && m_playState) {
+            Tetromino piece = (Tetromino) m_pieces.get(m_pieces.size() - 1);
             endOfGame(piece);
 
-            if (Objects.equals(direction, "down")) {
+            if (direction == DOWN) {
                 if (piece.isPossibleMovement(direction) && canMoveDown(piece)) {
                     showLastPlace(piece);
                     piece.down();
                 } else {
                     computeScore();
-                    needMorePiece = true;
+                    m_scoreView.setText("@string/m_score" + " : " + m_score);
+                    m_needMorePiece = true;
                 }
-            } else if (Objects.equals(direction, "left")) {
+            } else if (direction == LEFT) {
                 if (piece.isPossibleMovement(direction) && canMoveLeft(piece)) {
                     showLastPlace(piece);
                     piece.left();
                 }
-            } else if (Objects.equals(direction, "right")) {
+            } else if (direction == RIGHT) {
                 if (piece.isPossibleMovement(direction) && canMoveRight(piece)) {
                     showLastPlace(piece);
                     piece.right();
                 }
-            } else if (Objects.equals(direction, "rotate")) {
+            } else if (direction == ROTATE) {
                 if (piece.isPossibleMovement(direction) && canMoveRight(piece) && canMoveLeft(piece)) {
                     showLastPlace(piece);
                     piece.rotate();
@@ -316,43 +316,43 @@ public class GameActivity extends Activity {
         for (int k = 0; k < piece.getHeight(); k++) {
             for (int l = 0; l < piece.getWidth(); l++) {
                 if (piece.getMatrix()[k][l] == 1) {
-                    this.adapter.getGrid()[piece.getPos_i() + k][piece.getPos_j() + l] = -1;
+                    m_adapter.getGrid()[piece.getPos_i() + k][piece.getPos_j() + l] = -1;
                 }
             }
         }
     }
 
     public void initLines() {
-        this.lines.clear();
-        for (int i = 0; i < this.adapter.getNbLines(); i++) {
-            int[] cases = new int[this.adapter.getNbColumns()];
-            for (int j = 0; j < this.adapter.getNbColumns(); j++) {
+        m_lines.clear();
+        for (int i = 0; i < m_adapter.getNbLines(); i++) {
+            int[] cases = new int[m_adapter.getNbColumns()];
+            for (int j = 0; j < m_adapter.getNbColumns(); j++) {
                 cases[j] = R.drawable.square;
             }
             Line line = new Line(i, cases);
-            this.lines.add(line);
+            m_lines.add(line);
         }
     }
 
     public void endOfGame(Tetromino piece) {
         if (piece.getPos_i() == 0 && !canMoveDown(piece)) {
-            this.endOfGame = true;
+            m_endOfGame = true;
         }
     }
 
     public void isNeededOneMorePiece() {
-        if (needMorePiece) {
-            IMovement item = this.pieceFactory.getRandomPiece();
+        if (m_needMorePiece) {
+            IMovement item = m_pieceFactory.getRandomPiece();
             Tetromino newItem = (Tetromino) item;
-            pieces.add(newItem);
-            needMorePiece = false;
+            m_pieces.add(newItem);
+            m_needMorePiece = false;
         }
     }
 
     public void updateGrid() {
-        int[][] grid = this.adapter.getGrid();
+        int[][] grid = m_adapter.getGrid();
 
-        Tetromino piece = (Tetromino) pieces.get(pieces.size() - 1);
+        Tetromino piece = (Tetromino) m_pieces.get(m_pieces.size() - 1);
 
         for (int k = 0; k < piece.getHeight(); k++) {
             for (int l = 0; l < piece.getWidth(); l++) {
@@ -364,35 +364,35 @@ public class GameActivity extends Activity {
     }
 
     public void updateLines() {
-        int[][] grid = this.adapter.getGrid();
-        for (int i = 0; i < this.adapter.getNbLines(); i++) {
-            int[] cases = new int[this.adapter.getNbColumns()];
-            for (int j = 0; j < this.adapter.getNbColumns(); j++) {
+        int[][] grid = m_adapter.getGrid();
+        for (int i = 0; i < m_adapter.getNbLines(); i++) {
+            int[] cases = new int[m_adapter.getNbColumns()];
+            for (int j = 0; j < m_adapter.getNbColumns(); j++) {
                 if (grid[i][j] == -1) {
                     cases[j] = R.drawable.square;
                 } else if (grid[i][j] != R.drawable.square) {
                     cases[j] = grid[i][j];
                 } else {
-                    cases[j] = lines.get(i).getCases()[j];
+                    cases[j] = m_lines.get(i).getCases()[j];
                 }
             }
-            lines.get(i).setCases(cases);
+            m_lines.get(i).setCases(cases);
         }
-        this.adapter.resetGrid();
+        m_adapter.resetGrid();
     }
 
     public void refresh() {
         updateGrid();
         updateLines();
 
-        this.scoreView.setText("Score : " + this.score);
+        m_scoreView.setText(getString(R.string.score) + " : " + m_score);
 
-        for (int i = 0; i < this.adapter.getNbLines(); i++) {
-            for (int j = 0; j < this.adapter.getNbColumns(); j++) {
-                this.list.set(i * this.adapter.getNbColumns() + j, this.lines.get(i).getCases()[j]);
+        for (int i = 0; i < m_adapter.getNbLines(); i++) {
+            for (int j = 0; j < m_adapter.getNbColumns(); j++) {
+                m_list.set(i * m_adapter.getNbColumns() + j, m_lines.get(i).getCases()[j]);
             }
         }
 
-        this.adapter.updateResults(this.list);
+        m_adapter.updateResults(m_list);
     }
 }
