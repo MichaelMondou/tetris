@@ -170,6 +170,9 @@ public class GameActivity extends Activity {
         return super.onTouchEvent(event);
     }
 
+    /**
+     * Method called each time by the Handler
+     */
     public void play() {
         moveLastPiece(DOWN);
         if (!m_endOfGame) {
@@ -180,6 +183,9 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * Save the score if it's more than the latest highscore
+     */
     public void saveScore() {
         if (m_score > m_highScore) {
             SharedPreferences prefs = this.getSharedPreferences(
@@ -191,6 +197,9 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * Check the lines and compute the score
+     */
     public void computeScore() {
         ArrayList<Integer> rows = new ArrayList<>();
         for (int i = m_adapter.getNbLines() - 1; i >= 0; i--) {
@@ -218,6 +227,14 @@ public class GameActivity extends Activity {
 
         m_score += score;
 
+        removeLines(rows);
+    }
+
+    /**
+     * Remove the lines if completed
+     * @param rows : the rows to delete
+     */
+    public void removeLines(ArrayList<Integer> rows) {
         int[] cases = new int[m_adapter.getNbColumns()];
         for (int j = 0; j < m_adapter.getNbColumns(); j++) {
             cases[j] = R.drawable.square;
@@ -231,6 +248,9 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * Display the "Game over" panel
+     */
     public void displayResetPanel() {
         m_resetLayout.setVisibility(View.VISIBLE);
         m_resetButton.setVisibility(View.VISIBLE);
@@ -242,6 +262,9 @@ public class GameActivity extends Activity {
         });
     }
 
+    /**
+     * Reset all the data
+     */
     public void resetData() {
         m_adapter.resetGrid();
         initLines();
@@ -254,6 +277,11 @@ public class GameActivity extends Activity {
         m_resetButton.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Check the down movement
+     * @param piece : the piece to check
+     * @return : true if the piece can move
+     */
     public boolean canMoveDown(Tetromino piece) {
         for (int i = 0; i < piece.getHeight(); i++) {
             for (int j = 0; j < piece.getWidth(); j++) {
@@ -272,6 +300,11 @@ public class GameActivity extends Activity {
         return true;
     }
 
+    /**
+     * Check the left movement
+     * @param piece : the piece to check
+     * @return : true if the piece can move
+     */
     public boolean canMoveLeft(Tetromino piece) {
         for (int i = 0; i < piece.getHeight(); i++) {
             for (int j = 0; j < piece.getWidth(); j++) {
@@ -290,6 +323,11 @@ public class GameActivity extends Activity {
         return true;
     }
 
+    /**
+     * Check the right movement
+     * @param piece : the piece to check
+     * @return : true if the piece can move
+     */
     public boolean canMoveRight(Tetromino piece) {
         for (int i = 0; i < piece.getHeight(); i++) {
             for (int j = 0; j < piece.getWidth(); j++) {
@@ -308,6 +346,10 @@ public class GameActivity extends Activity {
         return true;
     }
 
+    /**
+     * Move the last piece in the direction passed in argument
+     * @param direction : the direction to move
+     */
     public void moveLastPiece(int direction) {
         if (m_pieces.size() > 0 && m_playState) {
             Tetromino piece = (Tetromino) m_pieces.get(m_pieces.size() - 1);
@@ -341,6 +383,10 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * Show in the grid the previous position of the piece to reset cases
+     * @param piece : the piece moved
+     */
     public void showLastPlace(Tetromino piece) {
         for (int k = 0; k < piece.getHeight(); k++) {
             for (int l = 0; l < piece.getWidth(); l++) {
@@ -351,6 +397,9 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * Init the lines with default cases
+     */
     public void initLines() {
         m_lines.clear();
         for (int i = 0; i < m_adapter.getNbLines(); i++) {
@@ -363,12 +412,19 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * Checl if the game is ended
+     * @param piece
+     */
     public void endOfGame(Tetromino piece) {
         if (piece.getPos_i() == 0 && !canMoveDown(piece)) {
             m_endOfGame = true;
         }
     }
 
+    /**
+     * Add a new piece is it's needed
+     */
     public void isNeededOneMorePiece() {
         if (m_needMorePiece) {
             IMovement item = m_pieceFactory.getRandomPiece();
@@ -378,6 +434,9 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * Update the position of the last piece in the grid
+     */
     public void updateGrid() {
         int[][] grid = m_adapter.getGrid();
 
@@ -392,6 +451,9 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * Update the lines with the cases in the grid
+     */
     public void updateLines() {
         int[][] grid = m_adapter.getGrid();
         for (int i = 0; i < m_adapter.getNbLines(); i++) {
@@ -410,6 +472,9 @@ public class GameActivity extends Activity {
         m_adapter.resetGrid();
     }
 
+    /**
+     * Method called each time by the handler
+     */
     public void refresh() {
         updateGrid();
         updateLines();
