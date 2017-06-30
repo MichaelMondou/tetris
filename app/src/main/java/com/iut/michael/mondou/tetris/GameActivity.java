@@ -37,7 +37,6 @@ public class GameActivity extends Activity {
     ImageButton m_menuImageButton;
     ImageButton m_pauseImageButton;
     ImageButton m_muteImageButton;
-    TextView m_resetView;
     TextView m_scoreView;
     TextView m_highScoreView;
     MediaPlayer m_mediaPlayer;
@@ -91,9 +90,6 @@ public class GameActivity extends Activity {
 
         m_resetButton = (Button) findViewById(R.id.resetButton);
         m_resetButton.setVisibility(View.INVISIBLE);
-
-        m_resetView = (TextView) findViewById(R.id.resetView);
-        m_resetView.setVisibility(View.INVISIBLE);
 
         m_menuImageButton = (ImageButton) findViewById(R.id.menuButton);
         m_menuImageButton.setOnClickListener(new View.OnClickListener() {
@@ -191,6 +187,7 @@ public class GameActivity extends Activity {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("m_highScore", m_score);
             editor.apply();
+            m_highScoreView.setText(getString(R.string.best_score) + " : " + m_highScore);
         }
     }
 
@@ -237,7 +234,6 @@ public class GameActivity extends Activity {
     public void displayResetPanel() {
         m_resetLayout.setVisibility(View.VISIBLE);
         m_resetButton.setVisibility(View.VISIBLE);
-        m_resetView.setVisibility(View.VISIBLE);
 
         m_resetButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -256,7 +252,6 @@ public class GameActivity extends Activity {
         m_endOfGame = false;
         m_resetLayout.setVisibility(View.INVISIBLE);
         m_resetButton.setVisibility(View.INVISIBLE);
-        m_resetView.setVisibility(View.INVISIBLE);
     }
 
     public boolean canMoveDown(Tetromino piece) {
