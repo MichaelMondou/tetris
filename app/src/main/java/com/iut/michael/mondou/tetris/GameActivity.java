@@ -193,7 +193,7 @@ public class GameActivity extends Activity {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("m_highScore", m_score);
             editor.apply();
-            m_highScoreView.setText(getString(R.string.best_score) + " : " + m_highScore);
+            m_highScoreView.setText(getString(R.string.best_score) + " : " + m_score);
         }
     }
 
@@ -473,7 +473,7 @@ public class GameActivity extends Activity {
     }
 
     /**
-     * Method called each time by the handler
+     * Method called each time by the han
      */
     public void refresh() {
         updateGrid();
