@@ -10,4 +10,5 @@
     <string name="pause_play">Pause / Jouer</string>
     <string name="tetris_logo">Logo Tetris</string>
     <string name="play">Jouer</string>
+    <string name="mute">Muet</string>
 </resources>

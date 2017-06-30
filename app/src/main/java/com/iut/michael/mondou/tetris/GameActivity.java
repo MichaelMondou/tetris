@@ -3,6 +3,7 @@ package com.iut.michael.mondou.tetris;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.GestureDetector;
@@ -35,14 +36,17 @@ public class GameActivity extends Activity {
     Button m_resetButton;
     ImageButton m_menuImageButton;
     ImageButton m_pauseImageButton;
+    ImageButton m_muteImageButton;
     TextView m_resetView;
     TextView m_scoreView;
     TextView m_highScoreView;
+    MediaPlayer m_mediaPlayer;
     int m_score;
     int m_highScore;
     boolean m_needMorePiece;
     boolean m_endOfGame;
     boolean m_playState = true;
+    boolean m_musicState = true;
 
     GestureDetector m_gestureDetector;
 
@@ -132,6 +136,36 @@ public class GameActivity extends Activity {
         m_highScoreView.setText(getString(R.string.best_score) + " : " + m_highScore);
         m_lines = new ArrayList<>();
         initLines();
+
+        m_mediaPlayer = MediaPlayer.create(this, R.raw.song);
+        m_mediaPlayer.start();
+
+        m_muteImageButton = (ImageButton) findViewById(R.id.muteButton);
+        m_muteImageButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (m_musicState) {
+                    m_musicState = false;
+                    m_muteImageButton.setBackgroundResource(R.drawable.mute);
+                    m_mediaPlayer.setVolume(0.0f,0.0f);
+                } else {
+                    m_musicState = true;
+                    m_muteImageButton.setBackgroundResource(R.drawable.music);
+                    m_mediaPlayer.setVolume(1.0f,1.0f);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (m_mediaPlayer != null) {
+            m_mediaPlayer.pause();
+            if (isFinishing()) {
+                m_mediaPlayer.stop();
+                m_mediaPlayer.release();
+            }
+        }
     }
 
     @Override
